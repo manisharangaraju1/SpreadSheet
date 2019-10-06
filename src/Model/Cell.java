@@ -1,6 +1,9 @@
 package Model;
 
-public class Cell {
+import java.util.Observable;
+import java.util.Observer;
+
+public class Cell extends Observable implements Observer {
     private int value;
     private String equation;
 
@@ -17,6 +20,23 @@ public class Cell {
     public Cell() {
     }
 
+    @Override
+    public synchronized void addObserver(Observer o) {
+        super.addObserver(o);
+    }
+
+    @Override
+    public synchronized void deleteObserver(Observer o) {
+        super.deleteObserver(o);
+    }
+
+    @Override
+    public void notifyObservers(Object arg) {
+        super.notifyObservers(arg);
+
+    }
+
+
     public int getValue() {
         return value;
     }
@@ -31,5 +51,10 @@ public class Cell {
 
     public void setEquation(String equation) {
         this.equation = equation;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
     }
 }

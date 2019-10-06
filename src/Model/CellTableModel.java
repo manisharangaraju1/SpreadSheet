@@ -1,5 +1,6 @@
 package Model;
 
+import Controller.InputHandler;
 import Controller.StateHandler;
 import State.State;
 
@@ -24,6 +25,7 @@ public class CellTableModel extends AbstractTableModel {
     public String getColumnName(int column) {
         return columnHeaders[column];
     }
+
     @Override
     public int getRowCount() {
         return 1;
@@ -36,36 +38,27 @@ public class CellTableModel extends AbstractTableModel {
 
     public Object getValueAt(int rowIndex, int columnIndex) {
         Cell cell = cellList.get(columnIndex);
-        if(currentState.toString().equals("EQUATION") && cell.getEquation() != null) {
-                return cell.getEquation();
+        if (currentState.toString().equals("EQUATION") && cell.getEquation() != null) {
+            return cell.getEquation();
         }
         return cell.getValue();
     }
 
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex)
-    {
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
         return true;
     }
 
     @Override
-    public void setValueAt(Object aValue, int rowIndex, int columnIndex)
-    {
+    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Cell cell = cellList.get(columnIndex);
-        if(isNumeric((String)aValue)) {
-            cell.setValue(Integer.parseInt(aValue.toString()));
-        }else{
-            cell.setEquation((String)aValue);
-        }
+        InputHandler inputHandler = new InputHandler(cellList);
+        inputHandler.parse(aValue, cell);
+
+
+
     }
 
-    public static boolean isNumeric(String str)
-    {
-        for (char c : str.toCharArray())
-        {
-            if (!Character.isDigit(c)) return false;
-        }
-        return true;
-    }
+
 
 }

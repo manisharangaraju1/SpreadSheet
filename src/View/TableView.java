@@ -54,15 +54,15 @@ public class TableView extends JFrame{
 
     private void createCellList() {
         cellList = new ArrayList<>();
-        cellList.add(new Cell(1));
-        cellList.add(new Cell(2));
-        cellList.add(new Cell("$A$B+"));
-        cellList.add(new Cell(78));
-        cellList.add(new Cell(34));
-        cellList.add(new Cell(3564));
-        cellList.add(new Cell("$C$D*"));
-        cellList.add(new Cell("$E"));
-        cellList.add(new Cell("$B"));
+        cellList.add(new Cell());
+        cellList.add(new Cell());
+        cellList.add(new Cell());
+        cellList.add(new Cell());
+        cellList.add(new Cell());
+        cellList.add(new Cell());
+        cellList.add(new Cell());
+        cellList.add(new Cell());
+        cellList.add(new Cell());
     }
 
 }
