@@ -1,5 +1,5 @@
 package Interpreter;
 
 public interface IExpression {
-	public int evaluate();
+	public double evaluate();
 }

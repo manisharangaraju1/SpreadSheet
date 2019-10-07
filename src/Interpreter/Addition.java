@@ -11,7 +11,7 @@ public class Addition implements IExpression {
 	}
 
 	@Override
-	public int evaluate() {
+	public double evaluate() {
 		return left.evaluate() + right.evaluate();
 	}
 }

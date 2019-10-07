@@ -2,14 +2,14 @@ package Interpreter;
 
 public class Number implements IExpression {
 
-	private final int number;
+	private final double number;
 
-	public Number(int number) {
+	public Number(double number) {
 		this.number = number;
 	}
 
 	@Override
-	public int evaluate() {
+	public double evaluate() {
 		return this.number;
 	}
 }

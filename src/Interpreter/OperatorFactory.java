@@ -16,4 +16,14 @@ public class OperatorFactory {
 		return null;
 	}
 
+	public static IExpression getInstance(String operator, IExpression operand) {
+		switch (operator) {
+			case "sin":
+				return new Sin(operand);
+			case "lg":
+				return new Log(operand);
+		}
+		return null;
+	}
+
 }

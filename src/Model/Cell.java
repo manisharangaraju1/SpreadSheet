@@ -1,23 +1,26 @@
 package Model;
 
+import Controller.InputHandler;
+import Controller.UtilMethods;
+import Interpreter.Main;
+import Momento.CellMomento;
+
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
 public class Cell extends Observable implements Observer {
-    private int value;
+    private int index;
+    private double value;
     private String equation;
+    InputHandler inputHandler;
 
-    public Cell(int value) {
-        this.value = value;
-        this.equation = null;
+    public int getIndex() {
+        return index;
     }
 
-    public Cell(String equation) {
-        this.equation = equation;
-        this.value = 0;
-    }
-
-    public Cell() {
+    public Cell(int index) {
+        this.index = index;
     }
 
     @Override
@@ -31,17 +34,26 @@ public class Cell extends Observable implements Observer {
     }
 
     @Override
-    public void notifyObservers(Object arg) {
-        super.notifyObservers(arg);
-
+    protected synchronized void setChanged() {
+        super.setChanged();
     }
 
+    @Override
+    public void notifyObservers(Object arg) {
+        setChanged();
+        super.notifyObservers(arg);
+    }
 
-    public int getValue() {
+    @Override
+    public synchronized int countObservers() {
+        return super.countObservers();
+    }
+
+    public double getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
@@ -54,7 +66,35 @@ public class Cell extends Observable implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(Observable o, Object cellList) {
 
+         inputHandler = new InputHandler((ArrayList) cellList);
+
+        if (this.equation != null) {
+            inputHandler.parse(this.equation, this);
+        } else {
+            inputHandler.parse(this.value, this);
+        }
+        this.notifyObservers(cellList);
+    }
+
+    public String toString() {
+        return "" + this.getValue();
+    }
+
+    public CellMomento save() {
+        return new CellMomento(this.index, this.value, this.equation);
+    }
+
+    public void revert(CellMomento cell) {
+        this.value = cell.getValue();
+        this.equation = cell.getEquation();
+
+        System.out.println(this.value);
+        if (this.equation != null) {
+            inputHandler.parse(this.equation, this);
+        } else {
+            inputHandler.parse(this.value, this);
+        }
     }
 }

@@ -11,7 +11,7 @@ public class Subtraction implements IExpression {
 	}
 
 	@Override
-	public int evaluate() {
+	public double evaluate() {
 		return left.evaluate() - right.evaluate();
 	}
 }

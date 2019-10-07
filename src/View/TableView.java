@@ -1,8 +1,10 @@
 package View;
 
+import Controller.MomentoHandler;
 import Controller.StateHandler;
 import Model.Cell;
 import Model.CellTableModel;
+import Momento.CareTaker;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +21,7 @@ public class TableView extends JFrame{
     private List<Cell> cellList;
     private JTable table;
     private JButton viewButton;
+    private JButton undoButton;
     private StateHandler stateHandler;
 
     public TableView() {
@@ -31,9 +34,11 @@ public class TableView extends JFrame{
         model = new CellTableModel(cellList, stateHandler.getState());
         table = new JTable(model);
         viewButton = new JButton(stateHandler.getState().toString());
+        undoButton = new JButton("Undo");
         scrollPane = new JScrollPane(table);
-        topPanel.add(scrollPane, BorderLayout.CENTER);
-        topPanel.add(viewButton, BorderLayout.SOUTH);
+        topPanel.add(scrollPane, BorderLayout.NORTH);
+        topPanel.add(viewButton, BorderLayout.CENTER);
+        topPanel.add(undoButton, BorderLayout.SOUTH);
 
         viewButton.addActionListener(new ActionListener() {
             @Override
@@ -42,6 +47,13 @@ public class TableView extends JFrame{
                 viewButton.setText(stateHandler.getState().toString());
                 CellTableModel model = new CellTableModel(cellList, stateHandler.getState());
                 table.setModel(model);
+            }
+        });
+
+        undoButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MomentoHandler.getCareTakerInstace().revert(cellList);
             }
         });
 
@@ -54,15 +66,15 @@ public class TableView extends JFrame{
 
     private void createCellList() {
         cellList = new ArrayList<>();
-        cellList.add(new Cell());
-        cellList.add(new Cell());
-        cellList.add(new Cell());
-        cellList.add(new Cell());
-        cellList.add(new Cell());
-        cellList.add(new Cell());
-        cellList.add(new Cell());
-        cellList.add(new Cell());
-        cellList.add(new Cell());
+        cellList.add(new Cell(0));
+        cellList.add(new Cell(1));
+        cellList.add(new Cell(2));
+        cellList.add(new Cell(3));
+        cellList.add(new Cell(4));
+        cellList.add(new Cell(5));
+        cellList.add(new Cell(6));
+        cellList.add(new Cell(7));
+        cellList.add(new Cell(8));
     }
 
 }
