@@ -31,8 +31,14 @@ public class UtilMethods {
     }
 
     public static boolean isNumeric(String str) {
-        for (char c : str.toCharArray()) {
-            if (!Character.isDigit(c)) return false;
+        try
+        {
+            Double.parseDouble(str);
+        }
+        catch(NumberFormatException e)
+        {
+            //not a double
+            return false;
         }
         return true;
     }

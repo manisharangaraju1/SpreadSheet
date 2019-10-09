@@ -13,11 +13,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TableView extends JFrame{
+public class TableView extends JFrame {
 
     private JPanel topPanel;
     private JScrollPane scrollPane;
-    private CellTableModel model;
+    private static CellTableModel model;
     private List<Cell> cellList;
     private JTable table;
     private JButton viewButton;
@@ -31,7 +31,8 @@ public class TableView extends JFrame{
         topPanel.setLayout(new BorderLayout());
         getContentPane().add(topPanel);
 
-        model = new CellTableModel(cellList, stateHandler.getState());
+        model = new CellTableModel(cellList);
+        model.getCurrentState(stateHandler.getState());
         table = new JTable(model);
         viewButton = new JButton(stateHandler.getState().toString());
         undoButton = new JButton("Undo");
@@ -45,7 +46,8 @@ public class TableView extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 stateHandler.getState().handleViewRequest();
                 viewButton.setText(stateHandler.getState().toString());
-                CellTableModel model = new CellTableModel(cellList, stateHandler.getState());
+                CellTableModel model = new CellTableModel(cellList);
+                model.getCurrentState(stateHandler.getState());
                 table.setModel(model);
             }
         });
@@ -77,4 +79,8 @@ public class TableView extends JFrame{
         cellList.add(new Cell(8));
     }
 
+
+    public static CellTableModel getModel() {
+        return model;
+    }
 }

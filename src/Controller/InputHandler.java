@@ -26,7 +26,7 @@ public class InputHandler {
         }
 
         if (isNumeric((String) input)) {
-            currentCell.setValue(Integer.parseInt(input.toString()));
+            currentCell.setValue(Double.parseDouble(input.toString()));
             currentCell.notifyObservers(cellList);
         } else {
             String newEquation = (String) input;

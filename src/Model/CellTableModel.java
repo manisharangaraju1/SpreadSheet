@@ -14,9 +14,8 @@ public class CellTableModel extends AbstractTableModel {
     State currentState;
     private final String[] columnHeaders = new String[]{"$A", "$B", "$C", "$D", "$E", "$F", "$G", "$H", "$I"};
 
-    public CellTableModel(List<Cell> cellList, State currentState) {
+    public CellTableModel(List<Cell> cellList) {
         this.cellList = cellList;
-        this.currentState = currentState;
     }
 
     public String getColumnName(int column) {
@@ -52,14 +51,23 @@ public class CellTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if(aValue instanceof Double) {
-
-        }
         Cell cell = cellList.get(columnIndex);
-        MomentoHandler.getCareTakerInstace().save(cell);
+        System.out.println("Saving : " + cell.getValue());
+        MomentoHandler.getCareTakerInstace().save(cell, cellList);
         InputHandler inputHandler = new InputHandler(cellList);
         inputHandler.parse(aValue, cell);
     }
 
+    public void getCurrentState(State state) {
+        this.currentState = state;
+    }
 
+    public void setCellList(List<Cell> cellList) {
+        this.cellList = cellList;
+    }
+
+    @Override
+    public void fireTableDataChanged() {
+        super.fireTableDataChanged();
+    }
 }

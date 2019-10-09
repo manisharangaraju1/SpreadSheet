@@ -1,14 +1,20 @@
 package Momento;
 
-public class CellMomento {
-        int index;
-        double value;
-        String equation;
+import Model.Cell;
 
-    public CellMomento(int index, double value, String equation) {
+import java.util.List;
+
+public class CellMomento {
+    int index;
+    double value;
+    String equation;
+    List<Cell> cellList;
+
+    public CellMomento(int index, double value, String equation, List<Cell> cellList) {
         this.index = index;
         this.value = value;
         this.equation = equation;
+        this.cellList = cellList;
     }
 
     public int getIndex() {

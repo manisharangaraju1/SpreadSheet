@@ -1,11 +1,12 @@
 package Model;
 
 import Controller.InputHandler;
-import Controller.UtilMethods;
-import Interpreter.Main;
 import Momento.CellMomento;
+import View.TableView;
 
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -15,9 +16,12 @@ public class Cell extends Observable implements Observer {
     private String equation;
     InputHandler inputHandler;
 
-    public int getIndex() {
-        return index;
+    public void setInputHandler(InputHandler inputHandler) {
+        this.inputHandler = inputHandler;
     }
+
+
+    public int getIndex() { return index; }
 
     public Cell(int index) {
         this.index = index;
@@ -82,19 +86,21 @@ public class Cell extends Observable implements Observer {
         return "" + this.getValue();
     }
 
-    public CellMomento save() {
-        return new CellMomento(this.index, this.value, this.equation);
+    public CellMomento save(List<Cell> cellList) {
+        return new CellMomento(this.index, this.value, this.equation, cellList);
     }
 
-    public void revert(CellMomento cell) {
+    public void revert(CellMomento cell, List<Cell> cellList) {
+        System.out.println("CellList after reverting passing: " + cellList);
+
         this.value = cell.getValue();
         this.equation = cell.getEquation();
-
-        System.out.println(this.value);
-        if (this.equation != null) {
-            inputHandler.parse(this.equation, this);
-        } else {
-            inputHandler.parse(this.value, this);
-        }
+        cellList.set(cell.getIndex(), this);
+        System.out.println("CellList after reverting list : " + cellList);
+        CellTableModel cellTableModel = TableView.getModel();
+        cellTableModel.fireTableDataChanged();
+//        System.out.println(this.countObservers());
+//        this.notifyObservers(cellList);
     }
+
 }
