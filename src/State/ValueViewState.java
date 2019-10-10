@@ -1,7 +1,5 @@
 package State;
 
-import Controller.SpreadSheet;
-import Controller.StateHandler;
 
 public class ValueViewState extends State {
 

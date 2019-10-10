@@ -1,30 +1,27 @@
 package Model;
 
 import Controller.InputHandler;
-import Momento.CellMomento;
-import View.TableView;
+import program.Context;
 
-import javax.swing.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Hashtable;
 import java.util.Observable;
 import java.util.Observer;
 
 public class Cell extends Observable implements Observer {
-    private int index;
+    private int row;
+    private int column;
     private double value;
     private String equation;
-    InputHandler inputHandler;
 
-    public void setInputHandler(InputHandler inputHandler) {
-        this.inputHandler = inputHandler;
+    public int getColumn() {
+        return column;
     }
 
-
-    public int getIndex() { return index; }
-
-    public Cell(int index) {
-        this.index = index;
+    public Cell(int row, int column) {
+        this.row = row;
+        this.column = column;
+        this.value = 0;
+        this.equation = "0";
     }
 
     @Override
@@ -70,37 +67,25 @@ public class Cell extends Observable implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object cellList) {
-
-         inputHandler = new InputHandler((ArrayList) cellList);
-
-        if (this.equation != null) {
-            inputHandler.parse(this.equation, this);
-        } else {
-            inputHandler.parse(this.value, this);
-        }
-        this.notifyObservers(cellList);
+    public void update(Observable o, Object context) {
+        new InputHandler((Context) context).parse(this.equation, this);
     }
 
-    public String toString() {
-        return "" + this.getValue();
+    public Hashtable<Integer, CellMemento> createMemento() {
+        CellMemento currentState = new CellMemento();
+        currentState.setState( "equation", this.equation );
+        currentState.setState( "column", new Integer(this.column) );
+        currentState.setState( "value", new Double(this.value) );
+        Hashtable stateTable = new Hashtable();
+        stateTable.put(this.column, currentState);
+        return stateTable;
     }
 
-    public CellMomento save(List<Cell> cellList) {
-        return new CellMomento(this.index, this.value, this.equation, cellList);
-    }
+    public void restoreState( CellMemento oldState, Context context) {
+        this.equation = (String) oldState.getState("equation", this.equation);
 
-    public void revert(CellMomento cell, List<Cell> cellList) {
-        System.out.println("CellList after reverting passing: " + cellList);
-
-        this.value = cell.getValue();
-        this.equation = cell.getEquation();
-        cellList.set(cell.getIndex(), this);
-        System.out.println("CellList after reverting list : " + cellList);
-        CellTableModel cellTableModel = TableView.getModel();
-        cellTableModel.fireTableDataChanged();
-//        System.out.println(this.countObservers());
-//        this.notifyObservers(cellList);
+        CellTableModel cellTableModel = new CellTableModel(context.getCellList());
+        cellTableModel.setValueAt(this.equation, this.row, this.column);
     }
 
 }

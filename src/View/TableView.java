@@ -1,10 +1,10 @@
 package View;
 
 import Controller.MomentoHandler;
-import Controller.StateHandler;
+import State.StateHandler;
 import Model.Cell;
 import Model.CellTableModel;
-import Momento.CareTaker;
+import program.Context;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,6 +25,23 @@ public class TableView extends JFrame {
     private StateHandler stateHandler;
 
     public TableView() {
+        initializeUI();
+    }
+
+    private void createCellList() {
+        cellList = new ArrayList<>();
+        cellList.add(new Cell(0,0));
+        cellList.add(new Cell(0,1));
+        cellList.add(new Cell(0,2));
+        cellList.add(new Cell(0,3));
+        cellList.add(new Cell(0,4));
+        cellList.add(new Cell(0,5));
+        cellList.add(new Cell(0,6));
+        cellList.add(new Cell(0,7));
+        cellList.add(new Cell(0,8));
+    }
+
+    private void initializeUI() {
         stateHandler = new StateHandler();
         createCellList();
         topPanel = new JPanel();
@@ -41,6 +58,11 @@ public class TableView extends JFrame {
         topPanel.add(viewButton, BorderLayout.CENTER);
         topPanel.add(undoButton, BorderLayout.SOUTH);
 
+        this.setTitle("SpreadSheet");
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.pack();
+        this.setVisible(true);
+
         viewButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -55,32 +77,9 @@ public class TableView extends JFrame {
         undoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MomentoHandler.getCareTakerInstace().revert(cellList);
+                MomentoHandler.getCareTakerInstace().getMemento(new Context(cellList));
             }
         });
 
-        this.setTitle("SpreadSheet");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.pack();
-        this.setVisible(true);
-
-    }
-
-    private void createCellList() {
-        cellList = new ArrayList<>();
-        cellList.add(new Cell(0));
-        cellList.add(new Cell(1));
-        cellList.add(new Cell(2));
-        cellList.add(new Cell(3));
-        cellList.add(new Cell(4));
-        cellList.add(new Cell(5));
-        cellList.add(new Cell(6));
-        cellList.add(new Cell(7));
-        cellList.add(new Cell(8));
-    }
-
-
-    public static CellTableModel getModel() {
-        return model;
     }
 }

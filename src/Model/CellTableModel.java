@@ -1,18 +1,19 @@
 package Model;
 
+import Controller.CircularDependency;
 import Controller.InputHandler;
 import Controller.MomentoHandler;
-import Momento.CareTaker;
 import State.State;
+import program.Context;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class CellTableModel extends AbstractTableModel {
+    private final String[] columnHeaders = new String[]{"$A", "$B", "$C", "$D", "$E", "$F", "$G", "$H", "$I"};
 
     List<Cell> cellList;
     State currentState;
-    private final String[] columnHeaders = new String[]{"$A", "$B", "$C", "$D", "$E", "$F", "$G", "$H", "$I"};
 
     public CellTableModel(List<Cell> cellList) {
         this.cellList = cellList;
@@ -39,31 +40,34 @@ public class CellTableModel extends AbstractTableModel {
 
     public Object getValueAt(int rowIndex, int columnIndex) {
         Cell cell = cellList.get(columnIndex);
-        if (currentState.toString().equals("EQUATION") && cell.getEquation() != null) {
+        if (currentState.toString().equals("EQUATION"))
             return cell.getEquation();
-        }
-        if(cell.getValue() % 1 == 0) {
-            return (int)cell.getValue();
-        }
-
         return cell.getValue();
     }
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         Cell cell = cellList.get(columnIndex);
-        System.out.println("Saving : " + cell.getValue());
-        MomentoHandler.getCareTakerInstace().save(cell, cellList);
-        InputHandler inputHandler = new InputHandler(cellList);
-        inputHandler.parse(aValue, cell);
+
+        MomentoHandler.getCareTakerInstace().addMemento(cell);
+
+        String currentEquation = cell.getEquation();
+        cell.setEquation((String) aValue);
+        Context context = new Context(cellList);
+        CircularDependency circularDependency = new CircularDependency(context);
+        if (circularDependency.hasCycle()) {
+//            cell.setValue("Error");
+            System.out.println("CYCLE DETECTED!!!");
+            cell.setEquation(currentEquation);
+        } else {
+            System.out.println("NO CYCLE");
+            InputHandler inputHandler = new InputHandler(context);
+            inputHandler.parse(aValue, cell);
+        }
     }
 
     public void getCurrentState(State state) {
         this.currentState = state;
-    }
-
-    public void setCellList(List<Cell> cellList) {
-        this.cellList = cellList;
     }
 
     @Override

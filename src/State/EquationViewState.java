@@ -1,6 +1,5 @@
 package State;
 
-import Controller.StateHandler;
 
 public class EquationViewState extends State {
 
