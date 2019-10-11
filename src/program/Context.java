@@ -1,34 +1,33 @@
 package program;
 
-import Model.Cell;
+import model.Cell;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/*
- * Context needed by the expressions to interpret. Contains cell Data and
- * a map with column headers and its respective column indices to make it easier to access values from the cellList
- * , along with methods to access the context data.
+/**
+ * Context needed to check if circular dependency exists and to interpret the expressions. Contains cell Data and
+ * a map with column headers and its respective column indices to make it easier to access values from the cellList,
+ * along with methods to access the context data.
  */
 
-
-public class Context  {
+public class Context {
     private Map<String, Integer> columnIndices = new HashMap<>();
-    private List<Cell> cellList;
+    private List<List<Cell>> cellList;
 
-    public List<Cell> getCellList() {
-        return cellList;
+    public List<List<Cell>> getCellList() {
+        return this.cellList;
     }
 
-    public Context(List<Cell> cellList) {
+    public Context(List<List<Cell>> cellList) {
         this.cellList = cellList;
         this.columnIndices = getColumnIndices();
     }
 
     public Double getVariableValue(String name) {
-        int index = columnIndices.get(name);
-        return (Double)this.cellList.get(index).getValue();
+        int column = columnIndices.get(name);
+        return (Double) this.cellList.get(0).get(column).getValue();
     }
 
     public int getIndexValue(String name) {
